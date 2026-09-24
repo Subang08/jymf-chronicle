@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="description" content="剑与魔法命运编年史 · 沉浸式文字RPG —— 冷峻写实、高自由度、因果严明的艾尔德兰大陆">
+<title>剑与魔法命运编年史 · 星母历824年</title>
+<style>
+/*__CSS__*/
+</style>
+</head>
+<body>
+<div id="appWrap">
+<aside id="timeline" aria-label="行动节点"><div id="tlInner"></div></aside>
+
+<div id="app">
+  <header id="topbar">
+    <div class="brand">
+      <span class="sigil">◈</span>
+      <span class="title">剑与魔法命运编年史</span>
+      <span class="ver" id="verLabel">星母历824年 · 深秋</span>
+    </div>
+    <div class="top-actions">
+      <button class="tb" id="btnStatus" type="button">状 态</button>
+      <button class="tb" id="btnBag" type="button">物 品</button>
+      <button class="tb" id="btnCard" type="button">角 色 卡</button>
+      <button class="tb" id="btnMap" type="button">地 图</button>
+      <button class="tb" id="btnCodex" type="button">典 籍</button>
+      <button class="tb" id="btnChron" type="button">大 事 记</button>
+      <button class="tb" id="btnAI" type="button" title="接入 DeepSeek 或本机模型">AI 接 入</button>
+      <button class="tb" id="btnSet" type="button">设 置</button>
+    </div>
+  </header>
+
+  <main id="stage">
+    <div id="logWrap"><section id="log" aria-live="polite"></section></div>
+    <div id="dock">
+      <div id="chips"></div>
+      <div id="inputRow">
+        <span class="caret-mark">▸</span>
+        <textarea id="cmd" rows="1" placeholder="自定义行动 / 台词 / 选择 a-e（回车提交）" autocomplete="off" spellcheck="false"></textarea>
+        <button id="send" type="button">行 动</button>
+      </div>
+      <div id="hintline"><span id="hint"></span></div>
+    </div>
+  </main>
+</div>
+</div>
+
+<!-- ================= 左侧节点悬浮提示 ================= -->
+<div id="tlTip" role="tooltip"></div>
+
+<!-- ================= 右侧边栏：玩家状态 / 物品栏 ================= -->
+<aside id="side" aria-hidden="true">
+  <div class="side-head">
+    <span id="sideTitle">◈ 玩 家 状 态 ◈</span>
+    <button id="sideClose" type="button" title="关闭（Esc）" aria-label="关闭">✕</button>
+  </div>
+  <div id="sideTabs">
+    <button type="button" data-side="status" class="on">状 态</button>
+    <button type="button" data-side="bag">物 品</button>
+    <button type="button" data-side="quest">任 务</button>
+  </div>
+  <div id="sideBody"></div>
+</aside>
+
+<!-- ================= 起始页 ================= -->
+<section id="landing">
+  <div class="land-wrap">
+    <div class="land-crest"><span>◈</span></div>
+    <div class="land-kicker">A E L D E R A N &nbsp; · &nbsp; 星 母 历 八 二 四 年</div>
+    <h1 class="land-title">剑 与 魔 法 命 运 编 年 史</h1>
+    <div class="land-sub">冷 峻 写 实 &nbsp;·&nbsp; 高 度 自 由 &nbsp;·&nbsp; 因 果 严 明</div>
+
+    <div class="land-rule"></div>
+
+    <p class="land-pitch">
+      众星之母沉睡于世界之核。祂的呼吸成为地脉魔法，祂的梦境编织着命运本身。<br>
+      帝国崩塌后的第八百二十四年，深秋。七王国并立，第三次恶魔战争的阴影正在聚集，<br>
+      古老预言开始应验 —— <span class="em">「当天空染上血色，深渊之喉将再度开启」</span>。<br>
+      你可以成为任何人，做任何事；<span class="dim">但世界不会围着你转。</span>
+    </p>
+
+    <div class="land-actions">
+      <button class="land-btn primary" id="landStart" type="button">开 始 游 戏</button>
+      <button class="land-btn ghost" id="landContinue" type="button" style="display:none">继 续 游 戏</button>
+      <button class="land-btn ghost" id="landAI" type="button">AI 接 入</button>
+    </div>
+    <p class="land-foot" style="margin-top:10px">接不接都能玩：不接就走引擎自带的叙述；接了以后对话、事件、自定义内容由 AI 写，数值仍由本地引擎算。</p>
+    <div class="land-actions" style="margin-top:12px">
+      <button class="land-btn mini" id="landMap" type="button">地 图</button>
+      <button class="land-btn mini" id="landCodex" type="button">典 籍</button>
+      <button class="land-btn mini" id="landChron" type="button">大 事 记</button>
+      <button class="land-btn mini" id="landSet" type="button">设 置</button>
+      <button class="land-btn mini" id="landAbout" type="button">关 于</button>
+    </div>
+
+    <div class="land-grid">
+      <div class="land-card">
+        <h4><i>◈</i>玩 法</h4>
+        <p><b>进入游戏前只有选项，没有自定义</b>：种族、职业、身份、背景、天赋、国度、地区，
+          全部从 <b>a</b> 起按实际数量顺排（如 18 个种族就是 a-r）。
+          <b>天赋是抽的</b>：50% 五个 D 级 / 30% 四个 C 级 / 15% 三个 B 级 / 4% 两个 A 级 / 1% 一个 SSS 级，
+          抽到多少就带走多少，最多抽五次、最后收下其中一组。
+          <b>进入游戏后，每个回合的行动选项固定 a-e</b>：a 顺势而为、b 剑走偏锋、c 谨慎观察、d 另一条路、
+          <b>e 自定义行动</b>（这一步才由你写，写什么都会被逐项检索）。
+          骰子按 d20 判定，命中看 AC，伤害按骰面结算。</p>
+      </div>
+      <div class="land-card">
+        <h4><i>◈</i>内 容</h4>
+        <p><b>二十七个分卷的艾尔德兰。</b>八位神明与九大阵营、七王国与六个种族国度、
+          十二个可玩种族、十种职业、八门副职业、四类怪物图鉴、五件神器；
+          星母历十二个月、六个节日、三种星象；<b>选择地区时会给出所在国家、
+          地理位置与附近国家情况</b>，四十六处可往之地各有地区志。</p>
+      </div>
+      <div class="land-card">
+        <h4><i>◈</i>功 能</h4>
+        <p><b>因果留痕。</b>生命/法力、疲劳六级、饥饿与口渴、负重上限、声望六级、
+          任务生成表、物价与货币换算、永久损伤与生死豁免。文字浏览区只增不减，
+          左侧节点可回看每一回合；随时可开「选择地区」看全大陆并动身。会死，死了这一局就结束。</p>
+      </div>
+    </div>
+
+    <p class="land-motto" id="landMotto"></p>
+
+    <div class="land-tags">
+      <span class="land-tag"><b>12</b> 种族 · <b>10</b> 职业 · <b>10</b> 身份 · <b>10</b> 背景</span>
+      <span class="land-tag"><b>SSS</b> 天赋开局十选一</span>
+      <span class="land-tag"><b>4</b> 种开篇剧本</span>
+      <span class="land-tag"><b>d20/d12/d10</b> 遭遇表</span>
+      <span class="land-tag">零依赖 · 可离线 · 自动存档</span>
+    </div>
+
+    <div class="land-ridge"><i></i><i></i><i></i></div>
+
+    <div class="land-foot">
+      依据《剑与魔法命运编年史》设定集 v1.0（卷一至卷二十七）实现<br>
+      全部面板以 LaTeX 美化框渲染 · 界面不使用 emoji
+    </div>
+  </div>
+</section>
+
+<div id="modal" class="hidden"><div id="modalBox"></div></div>
+
+<script>
+/*__JS__*/
+</script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+{
+  "_说明": "把下面 apiKey 换成你自己的 DeepSeek Key（sk- 开头），或者不改这里、改用环境变量 DEEPSEEK_API_KEY。这个文件只在服务端读，浏览器看不到。",
+  "apiKey": "",
+  "port": 8787,
+  "host": "127.0.0.1",
+  "baseUrl": "https://api.deepseek.com",
+  "model": "deepseek-chat",
+  "temperature": 1.15,
+  "maxTokens": 260,
+  "timeoutMs": 45000,
+  "dailyCallCap": 3000,
+  "allowLan": false,
+
+  "_可选项": {
+    "model": "deepseek-chat 便宜快，适合叙述与对话；deepseek-reasoner 更会算，适合事件与判定，但更慢更贵",
+    "host": "要给别人玩就把 host 改成 0.0.0.0（或把 allowLan 设成 true），再用本机 IP / 域名访问",
+    "dailyCallCap": "一天最多调多少次上游，超了就回退离线模板，防止忘关页面烧钱",
+    "allowLan": "true 时自动监听 0.0.0.0"
+  }
+}
